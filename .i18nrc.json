@@ -1,0 +1,7 @@
+{
+  "prefix": "automatedIrp",
+  "paths": {
+    "automatedIrp": "."
+  },
+  "translations": ["translations/ja-JP.json"]
+}
