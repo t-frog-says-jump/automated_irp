@@ -22,6 +22,7 @@ import {
   EuiFlexItem,
   EuiSpacer,
   EuiDescribedFormGroup,
+  EuiCheckboxGroup,
 } from '@elastic/eui';
 
 import { CoreStart } from '../../../../src/core/public';
@@ -43,14 +44,61 @@ export const AutomatedIrpApp = ({
   navigation,
 }: AutomatedIrpAppDeps) => {
 
+  const artefact_type = ["activitiescache", "amcache.applaunches", "amcache.application_files", "amcache.applications",
+  "amcache.device_containers", "amcache.drivers", "amcache.files", "amcache.programs", "amcache.shortcuts",
+  "catroot", "cim.consumerbindings", "defender.evtx", "defender.exclusions", "defender.quarantine",
+  "defender.recover", "environment_variables", "path_extensions", "exchange.transport_agents",
+  "alternateshell", "appinit", "bootshell", "commandprocautorun", "filerenameop",
+  "knowndlls", "ndis", "nullsessionpipes", "pathenvironment", "sessionmanager", "winrar", "winsocknamespaceprovider",
+  "lnk", "keyboard", "amcache_install", "etl.boot", "etl.etl", "etl.shutdown", "evt", "scraped_evt", "evtx",
+  "scraped_evtx", "pfro", "notifications.appdb", "notifications.wpndatabase", "prefetch", "recyclebin", "sevenzip", "appxdebugkeys",
+  "auditpol", "bam", "cit.cit", "cit.dp", "cit.modules", "cit.puu", "cit.telemetry", "clsid.machine", "clsid.user", "firewall", "mru.acmru",
+  "mru.lastvisited", "mru.msoffice", "mru.mstsc", "mru.networkdrive", "mru.opensave", "mru.recentdocs", "mru.run", "muicache",
+  "network_history", "recentfilecache", "regf", "runkeys", "shellbags", "shimcache", "trusteddocs", "usb", "userassist", "sam", "services",
+  "sru.application", "sru.application_timeline", "sru.energy_estimator", "sru.energy_usage", "sru.energy_usage_lt",
+  "sru.network_connectivity", "sru.network_data", "sru.push_notification", "sru.sdp_cpu_provider", "sru.sdp_network_provider",
+  "sru.sdp_physical_disk_provider", "sru.sdp_volume_provider", "sru.vfu", "startupinfo", "syscache", "tasks", "thumbcache.iconcache",
+  "thumbcache.thumbcache", "ual.client_access", "ual.domains_seen", "ual.role_access", "ual.system_identities", "ual.virtual_machines", "wer",
+  "mcafee.msc", "sophos.hitmanlogs", "sophos.sophoshomelogs", "symantec.firewall", "symantec.logs", "trendmicro.wffirewall", "trendmicro.wflogs",
+  "docker.containers", "docker.images", "anydesk.logs", "remoteaccess.logs", "teamviewer.logs", "powershell_history", "ssh.authorized_keys", 
+  "ssh.known_hosts", "ssh.private_keys", "ssh.public_keys", "sshd.config", "openvpn.config", "wireguard.config", "cpanel.lastlogin", "apache.access", 
+  "caddy.access", "iis.access", "iis.logs", "nginx.access", "webserver.access", "webserver.logs", "browser.downloads", "browser.extensions", 
+  "browser.history", "chrome.downloads", "chrome.extensions", "chrome.history", "chromium.downloads", "chromium.extensions", "chromium.history", 
+  "edge.downloads", "edge.extensions", "edge.history", "firefox.downloads", "firefox.history", "iexplore.downloads", "iexplore.history", "acquire_handles", 
+  "acquire_hashes", "mft", "usnjrnl"].sort((a, b) => a.localeCompare(b));
+
+  const profil = ["activitiescache", "amcache.applaunches", "amcache.application_files", "amcache.applications",
+  "amcache.device_containers", "amcache.drivers", "amcache.files", "amcache.programs", "amcache.shortcuts",
+  "catroot", "cim.consumerbindings", "defender.evtx", "defender.exclusions", "defender.quarantine",
+  "defender.recover", "environment_variables", "path_extensions", "exchange.transport_agents",
+  "alternateshell", "appinit", "bootshell", "commandprocautorun", "filerenameop",
+  "knowndlls", "ndis", "nullsessionpipes", "pathenvironment", "sessionmanager", "winrar", "winsocknamespaceprovider",
+  "lnk", "keyboard", "amcache_install", "etl.boot", "etl.etl", "etl.shutdown", "evt", "scraped_evt", "evtx",
+  "scraped_evtx", "pfro", "notifications.appdb", "notifications.wpndatabase", "prefetch", "recyclebin", "sevenzip", "appxdebugkeys",
+  "auditpol", "bam", "cit.cit", "cit.dp", "cit.modules", "cit.puu", "cit.telemetry", "clsid.machine", "clsid.user", "firewall", "mru.acmru",
+  "mru.lastvisited", "mru.msoffice", "mru.mstsc", "mru.networkdrive", "mru.opensave", "mru.recentdocs", "mru.run", "muicache",
+  "network_history", "recentfilecache", "regf", "runkeys", "shellbags", "shimcache", "trusteddocs", "usb", "userassist", "sam", "services",
+  "sru.application", "sru.application_timeline", "sru.energy_estimator", "sru.energy_usage", "sru.energy_usage_lt",
+  "sru.network_connectivity", "sru.network_data", "sru.push_notification", "sru.sdp_cpu_provider", "sru.sdp_network_provider",
+  "sru.sdp_physical_disk_provider", "sru.sdp_volume_provider", "sru.vfu", "startupinfo", "syscache", "tasks", "thumbcache.iconcache",
+  "thumbcache.thumbcache", "ual.client_access", "ual.domains_seen", "ual.role_access", "ual.system_identities", "ual.virtual_machines", "wer",
+  "mcafee.msc", "sophos.hitmanlogs", "sophos.sophoshomelogs", "symantec.firewall", "symantec.logs", "trendmicro.wffirewall", "trendmicro.wflogs",
+  "docker.containers", "docker.images", "anydesk.logs", "remoteaccess.logs", "teamviewer.logs", "powershell_history", "ssh.authorized_keys", 
+  "ssh.known_hosts", "ssh.private_keys", "ssh.public_keys", "sshd.config", "openvpn.config", "wireguard.config", "cpanel.lastlogin", "apache.access", 
+  "caddy.access", "iis.access", "iis.logs", "nginx.access", "webserver.access", "webserver.logs", "browser.downloads", "browser.extensions", 
+  "browser.history", "chrome.downloads", "chrome.extensions", "chrome.history", "chromium.downloads", "chromium.extensions", "chromium.history", 
+  "edge.downloads", "edge.extensions", "edge.history", "firefox.downloads", "firefox.history", "iexplore.downloads", "iexplore.history", "acquire_handles", 
+  "acquire_hashes", "mft", "usnjrnl"].sort((a, b) => a.localeCompare(b));
+
   const [shuffleIp, setShuffleIp] = useState("");
-  const [bearerKey, setBearerKey] = useState("");
+  const [workflow_id, setWorkflowId] = useState("");
+  const [files, setFiles] = useState({});
 
   const [shuffleIpTemp, setShuffleIpTemp] = useState("");
-  const [bearerKeyTemp, setBearerKeyTemp] = useState("");
+  const [workflowIdTemp, setWorkflowIdTemp] = useState("");
 
-  const [files, setFiles] = useState({});
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [isPopoverOpenArt, setIsPopoverOpenArt] = useState(false);
 
   const onButtonClick = () => {
     setIsPopoverOpen(!isPopoverOpen);
@@ -58,6 +106,14 @@ export const AutomatedIrpApp = ({
 
   const closePopover = () => {
     setIsPopoverOpen(false);
+  };
+
+  const onButtonClickArt = () => {
+    setIsPopoverOpenArt(!isPopoverOpenArt);
+  };
+
+  const closePopoverArt = () => {
+    setIsPopoverOpenArt(false);
   };
 
   const button = (
@@ -70,39 +126,48 @@ export const AutomatedIrpApp = ({
       Изменить данные Shuffle
     </EuiButton>
   );
-  
+
+  const buttonArt = (
+    <EuiButton
+      iconSide="right"
+      fill
+      size = "s"
+      iconType="arrowDown"
+      onClick={onButtonClickArt}
+    >
+      Артефакты
+    </EuiButton>
+  );
+
+  function validate_data(data: string, re: RegExp, mes: string, format: any){
+    if (data != '')
+      if (re.test(data)){
+
+        format(data);
+        notifications.toasts.addSuccess(
+        i18n.translate('automatedIrp.dataUpload', {
+          defaultMessage: mes + ' обновлен: ' + data
+        }))}
+        
+      else
+        notifications.toasts.addDanger(
+        i18n.translate('automatedIrp.dataDontUpload', {
+          defaultMessage: 'Ошибка валидации ' + mes + ': ' + data
+        }))
+
+    return 
+  }
+
   const onClickSave = () => {    
 
-    const ip = String(shuffleIpTemp);
-    const key = String(bearerKeyTemp);
-    var re_key = new RegExp('^[[0-9]|a-f]{8}-([[0-9]|a-f]{4}-){3}[[0-9]|a-f]{12}$');
-    var re_ip = new RegExp('(^([0-9]{1,3}\.){3}[0-9]{1,3}$)|(^[a-zA-Z0-9][a-zA-Z0-9-_]{0,61}[a-zA-Z0-9]{0,1}\.([a-zA-Z]{1,6}|[a-zA-Z0-9-]{1,30}\.[a-zA-Z]{2,3})$)');
+    let re_ip = new RegExp('(^([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,5})?$)|(^[a-zA-Z0-9][a-zA-Z0-9-_]{0,61}[a-zA-Z0-9]{0,1}\.([a-zA-Z]{1,6}|[a-zA-Z0-9-]{1,30}\.[a-zA-Z]{2,3})(:[0-9]{1,5})?$)');
+    let re_workflow = new RegExp('^webhook_[a-z0-9-]*$');
 
-    if (key != '')
-      if (re_key.test(key)){
-        setBearerKey(key)
-        notifications.toasts.addSuccess(
-        i18n.translate('automatedIrp.dataUpload', {
-          defaultMessage: 'Bearer ключ обновлен: ' + key,
-        }))}
-      else
-        notifications.toasts.addDanger(
-        i18n.translate('automatedIrp.dataDontUpload', {
-          defaultMessage: 'Ошибка валидации Bearer ключа: ' + key,
-        }))
+    validate_data(shuffleIpTemp, re_ip, "IP", setShuffleIp);
+    validate_data(workflowIdTemp, re_workflow, "Workflow id", setWorkflowId);
 
-    if (ip != '')
-      if (re_ip.test(ip)){
-        setShuffleIp(ip)
-        notifications.toasts.addSuccess(
-        i18n.translate('automatedIrp.dataUpload', {
-          defaultMessage: 'IP обновлен: ' + ip,
-        }))}
-      else
-        notifications.toasts.addDanger(
-        i18n.translate('automatedIrp.dataDontUpload', {
-          defaultMessage: 'Ошибка валидации ip: ' + ip,
-        }))
+    setShuffleIpTemp("")
+    setWorkflowIdTemp("")
 
   }
 
@@ -115,8 +180,8 @@ export const AutomatedIrpApp = ({
           </EuiFormRow>
         </EuiFlexItem>
         <EuiFlexItem>
-          <EuiFormRow label="Ключ API" style={{ width: 300 }}>
-            <EuiFieldText id="automatedIrp.bearerkey" onChange={(e) => setBearerKeyTemp(e.target.value)} icon="tokenKey" placeholder={ String(bearerKey) }/>
+          <EuiFormRow label="Workflow id" style={{ width: 250 }}>
+            <EuiFieldText id="automatedIrp.workflow_id" onChange={(e) => setWorkflowIdTemp(e.target.value)} icon="tokenKey" placeholder={ String(workflow_id) }/>
           </EuiFormRow>
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -127,6 +192,30 @@ export const AutomatedIrpApp = ({
       </EuiFlexGroup>
     </EuiForm>
   );
+
+  var artefact_list = []
+  var default_profil = {[String("mft")]: true}
+  for ( let list_art of artefact_type){
+    if (list_art in profil)
+      default_profil[list_art] = true
+    
+    artefact_list.push({
+                        id: "automatedIrp.artefact" + list_art,
+                        label: list_art,
+                      })
+  }
+
+  const [checkboxIdToSelectedMap, setCheckboxIdToSelectedMap] = useState(default_profil);
+
+  const onChangeArt = (optionId: string) => {
+    const newCheckboxIdToSelectedMap = {
+      ...checkboxIdToSelectedMap,
+      ...{
+        [optionId]: optionId in checkboxIdToSelectedMap? false : true,
+      },
+    };
+    setCheckboxIdToSelectedMap(newCheckboxIdToSelectedMap);
+  };
 
   const onClickHandler = (files: any) => {    
     setFiles(files.length > 0 ? Array.from(files) : []);
@@ -139,17 +228,15 @@ export const AutomatedIrpApp = ({
     );
   };
 
-  const onClickButton = (files: any, bearerKey: any, shuffleIP: any) => {    
+  const onClickButton = (files: any, shuffleIP: any) => {    
 
     for(const file of files){
       const form = new FormData();
-      form.append('shuffle_file', file, file.name);
 
-      fetch('http://' + String(shuffleIP) + '/api/v1/files/file/upload', {
+      form.append('file', file, file.name);
+
+      fetch('http://dissect/upload', {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + String(bearerKey)
-        },
         body: form
       })
       .then(result => result.json())
@@ -166,6 +253,31 @@ export const AutomatedIrpApp = ({
             defaultMessage: 'Ошибка ' + jsonformat,
           }))
       })
+      for ( const art of artefact_type){
+        if(art in checkboxIdToSelectedMap)
+          fetch('http://' + String(shuffleIP) + 
+          '/api/v1/hooks/' + String(workflow_id), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: '{"image": "' + files.name + '", "artefact" : "' + art + '"}'
+          })
+          .then(result => result.json())
+          .then(jsonformat => {
+            if (jsonformat['status'] === 'ok')
+              notifications.toasts.addSuccess(
+              i18n.translate('automatedIrp.dataUpload', {
+                defaultMessage: 'Файл отправлен на сервер',
+              }))
+
+            else
+              notifications.toasts.addDanger(
+              i18n.translate('automatedIrp.dataDontUpload', {
+                defaultMessage: 'Ошибка ' + jsonformat,
+              }))
+          })
+      }
     }
   };
 
@@ -219,7 +331,7 @@ export const AutomatedIrpApp = ({
                         isOpen={isPopoverOpen}
                         closePopover={closePopover}
                       >
-                        <div style={{ width: 700 }}>{formSample}</div>
+                        <div style={{ width: 640 }}>{formSample}</div>
                       </EuiPopover> 
                     </EuiDescribedFormGroup>
 
@@ -242,10 +354,31 @@ export const AutomatedIrpApp = ({
                     </EuiFlexItem>
                   </EuiFlexGroup>
                   </div>
-                  <div>
-                    <EuiButton type="submit" size="s" onClick={() => onClickButton(files, bearerKey, shuffleIp)}>
-                      <FormattedMessage id="automatedIrp.buttonText" defaultMessage="Analyze" />
-                    </EuiButton>
+                  <div style={{ width: 400 }}>
+                    <EuiFlexGroup>
+                      <EuiFlexItem>
+                      <EuiButton type="submit" size="s" onClick={() => onClickButton(files, shuffleIp)}>
+                        <FormattedMessage id="automatedIrp.buttonText" defaultMessage="Анализировать" />
+                      </EuiButton>
+                        <EuiSpacer />
+                      </EuiFlexItem>
+                        <EuiFlexItem>
+                          <EuiPopover
+                              button={buttonArt}
+                              isOpen={isPopoverOpenArt}
+                              closePopover={closePopoverArt}
+                            >
+                              <EuiCheckboxGroup 
+                              style={{ width: 200, height: 200 }} 
+                              options={artefact_list}
+                              className="eui-yScrollWithShadows"
+                              idToSelectedMap={checkboxIdToSelectedMap}
+                              onChange={(id) => onChangeArt(id)}
+                              tabIndex={0} 
+                              />
+                            </EuiPopover> 
+                          </EuiFlexItem>                    
+                    </EuiFlexGroup>
                   </div>
                 </EuiPageContentBody>
               </EuiPageContent>
