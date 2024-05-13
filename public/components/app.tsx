@@ -67,32 +67,11 @@ export const AutomatedIrpApp = ({
   "edge.downloads", "edge.extensions", "edge.history", "firefox.downloads", "firefox.history", "iexplore.downloads", "iexplore.history", "acquire_handles", 
   "acquire_hashes", "mft", "usnjrnl"].sort((a, b) => a.localeCompare(b));
 
-  const profil = ["activitiescache", "amcache.applaunches", "amcache.application_files", "amcache.applications",
-  "amcache.device_containers", "amcache.drivers", "amcache.files", "amcache.programs", "amcache.shortcuts",
-  "catroot", "cim.consumerbindings", "defender.evtx", "defender.exclusions", "defender.quarantine",
-  "defender.recover", "environment_variables", "path_extensions", "exchange.transport_agents",
-  "alternateshell", "appinit", "bootshell", "commandprocautorun", "filerenameop",
-  "knowndlls", "ndis", "nullsessionpipes", "pathenvironment", "sessionmanager", "winrar", "winsocknamespaceprovider",
-  "lnk", "keyboard", "amcache_install", "etl.boot", "etl.etl", "etl.shutdown", "evt", "scraped_evt", "evtx",
-  "scraped_evtx", "pfro", "notifications.appdb", "notifications.wpndatabase", "prefetch", "recyclebin", "sevenzip", "appxdebugkeys",
-  "auditpol", "bam", "cit.cit", "cit.dp", "cit.modules", "cit.puu", "cit.telemetry", "clsid.machine", "clsid.user", "firewall", "mru.acmru",
-  "mru.lastvisited", "mru.msoffice", "mru.mstsc", "mru.networkdrive", "mru.opensave", "mru.recentdocs", "mru.run", "muicache",
-  "network_history", "recentfilecache", "regf", "runkeys", "shellbags", "shimcache", "trusteddocs", "usb", "userassist", "sam", "services",
-  "sru.application", "sru.application_timeline", "sru.energy_estimator", "sru.energy_usage", "sru.energy_usage_lt",
-  "sru.network_connectivity", "sru.network_data", "sru.push_notification", "sru.sdp_cpu_provider", "sru.sdp_network_provider",
-  "sru.sdp_physical_disk_provider", "sru.sdp_volume_provider", "sru.vfu", "startupinfo", "syscache", "tasks", "thumbcache.iconcache",
-  "thumbcache.thumbcache", "ual.client_access", "ual.domains_seen", "ual.role_access", "ual.system_identities", "ual.virtual_machines", "wer",
-  "mcafee.msc", "sophos.hitmanlogs", "sophos.sophoshomelogs", "symantec.firewall", "symantec.logs", "trendmicro.wffirewall", "trendmicro.wflogs",
-  "docker.containers", "docker.images", "anydesk.logs", "remoteaccess.logs", "teamviewer.logs", "powershell_history", "ssh.authorized_keys", 
-  "ssh.known_hosts", "ssh.private_keys", "ssh.public_keys", "sshd.config", "openvpn.config", "wireguard.config", "cpanel.lastlogin", "apache.access", 
-  "caddy.access", "iis.access", "iis.logs", "nginx.access", "webserver.access", "webserver.logs", "browser.downloads", "browser.extensions", 
-  "browser.history", "chrome.downloads", "chrome.extensions", "chrome.history", "chromium.downloads", "chromium.extensions", "chromium.history", 
-  "edge.downloads", "edge.extensions", "edge.history", "firefox.downloads", "firefox.history", "iexplore.downloads", "iexplore.history", "acquire_handles", 
-  "acquire_hashes", "mft", "usnjrnl"].sort((a, b) => a.localeCompare(b));
+  const default_profil = {[String("environment_variables")]: true, [String("bootshell")]: true, [String("evtx")]: true, [String("usnjrnl")]: true, [String("powershell_history")]: true}
 
-  const [shuffleIp, setShuffleIp] = useState("");
+  const [shuffleIp, setShuffleIp] = useState("shuffle");
   const [workflow_id, setWorkflowId] = useState("");
-  const [files, setFiles] = useState({});
+  const [files, setFiles] = useState(Array({}));
 
   const [shuffleIpTemp, setShuffleIpTemp] = useState("");
   const [workflowIdTemp, setWorkflowIdTemp] = useState("");
@@ -194,13 +173,10 @@ export const AutomatedIrpApp = ({
   );
 
   var artefact_list = []
-  var default_profil = {[String("mft")]: true}
   for ( let list_art of artefact_type){
-    if (list_art in profil)
-      default_profil[list_art] = true
     
     artefact_list.push({
-                        id: "automatedIrp.artefact" + list_art,
+                        id: list_art,
                         label: list_art,
                       })
   }
@@ -228,57 +204,53 @@ export const AutomatedIrpApp = ({
     );
   };
 
-  const onClickButton = (files: any, shuffleIP: any) => {    
-
-    for(const file of files){
-      const form = new FormData();
-
-      form.append('file', file, file.name);
-
-      fetch('http://dissect/upload', {
-        method: 'POST',
-        body: form
-      })
-      .then(result => result.json())
-      .then(jsonformat => {
-        if (jsonformat['success'] === 'true')
-          notifications.toasts.addSuccess(
-          i18n.translate('automatedIrp.dataUpload', {
-            defaultMessage: 'Файл отправлен на сервер',
-          }))
-
-        else
-          notifications.toasts.addDanger(
-          i18n.translate('automatedIrp.dataDontUpload', {
-            defaultMessage: 'Ошибка ' + jsonformat,
-          }))
-      })
-      for ( const art of artefact_type){
-        if(art in checkboxIdToSelectedMap)
-          fetch('http://' + String(shuffleIP) + 
-          '/api/v1/hooks/' + String(workflow_id), {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: '{"image": "' + files.name + '", "artefact" : "' + art + '"}'
-          })
-          .then(result => result.json())
-          .then(jsonformat => {
-            if (jsonformat['status'] === 'ok')
-              notifications.toasts.addSuccess(
-              i18n.translate('automatedIrp.dataUpload', {
-                defaultMessage: 'Файл отправлен на сервер',
-              }))
-
-            else
-              notifications.toasts.addDanger(
-              i18n.translate('automatedIrp.dataDontUpload', {
-                defaultMessage: 'Ошибка ' + jsonformat,
-              }))
-          })
-      }
+  async function uploadMultiple(formData: FormData) {
+    try {
+      const response = await fetch("http://dissect/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+      if (result['status'] === 'ok')
+        notifications.toasts.addSuccess(
+        i18n.translate('automatedIrp.dataUpload', {
+          defaultMessage: 'Файл отправлен на сервер',
+        }))
+    } catch (error) {
+      notifications.toasts.addDanger(
+      i18n.translate('automatedIrp.dataDontUpload', {
+        defaultMessage: 'Ошибка ' + error,
+      }))
     }
+  }
+
+  async function uploadImage(url: string, body: string) {
+    const response = await fetch(url, {
+      method: "POST",
+      body: body,
+    });
+    await response.json();
+
+    notifications.toasts.addSuccess(
+    i18n.translate('automatedIrp.uploadImage', {
+      defaultMessage: 'Анализ завершен',
+    }))
+  }
+
+  const onClickButton = (files: Array<any>, shuffleIP: any) => {    
+
+    const formData = new FormData();
+
+    for(const file of files) 
+      formData.append('file', file, file.name);
+
+    uploadMultiple(formData)
+
+    for (const art of artefact_type)
+      if(art in checkboxIdToSelectedMap)
+        for(const file of files) 
+          uploadImage('http://' + String(shuffleIP) + '/api/v1/hooks/' + String(workflow_id),'{"image": "' + file.name + '", "artefact" : "' + art + '"}')
+
   };
 
   return (
