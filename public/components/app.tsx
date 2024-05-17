@@ -206,7 +206,7 @@ export const AutomatedIrpApp = ({
 
   async function uploadMultiple(formData: FormData) {
     try {
-      const response = await fetch("http://dissect/upload", {
+      const response = await fetch("http://artifact-collector.dissect/upload", {
         method: "POST",
         body: formData,
       });
