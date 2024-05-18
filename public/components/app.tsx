@@ -67,9 +67,19 @@ export const AutomatedIrpApp = ({
   "edge.downloads", "edge.extensions", "edge.history", "firefox.downloads", "firefox.history", "iexplore.downloads", "iexplore.history", "acquire_handles", 
   "acquire_hashes", "mft", "usnjrnl"].sort((a, b) => a.localeCompare(b));
 
-  const default_profil = {[String("environment_variables")]: true, [String("bootshell")]: true, [String("evtx")]: true, [String("usnjrnl")]: true, [String("powershell_history")]: true}
+  const default_profil = {[String("defender.evtx")]: true, [String("defender.exclusions")]: true, [String("defender.quarantine")]: true, 
+  [String("defender.recover")]: true, [String("environment_variables")]: true, [String("pathenvironment")]: true, 
+  [String("evt")]: true, [String("evtx")]: true, [String("runkeys")]: true, [String("powershell_history")]: true, 
+  [String("usnjrnl")]: true, [String("usb")]: true, [String("tasks")]: true, [String("startupinfo")]: true, 
+  [String("docker.containers")]: true, [String("docker.images")]: true, [String("webserver.access")]: true, 
+  [String("webserver.logs")]: true, [String("browser.downloads")]: true, [String("browser.extensions")]: true, 
+  [String("browser.history")]: true, [String("chrome.downloads")]: true, [String("chrome.extensions")]: true, 
+  [String("chrome.history")]: true, [String("chromium.downloads")]: true, [String("chromium.extensions")]: true, 
+  [String("chromium.history")]: true, [String("edge.downloads")]: true, [String("edge.extensions")]: true, 
+  [String("edge.history")]: true, [String("firefox.downloads")]: true, [String("firefox.history")]: true, 
+  [String("iexplore.downloads")]: true, [String("iexplore.history")]: true}
 
-  const [shuffleIp, setShuffleIp] = useState("shuffle");
+  const [shuffleIp, setShuffleIp] = useState("shuffle.shuffle.svc.cluster.local");
   const [workflow_id, setWorkflowId] = useState("");
   const [files, setFiles] = useState(Array({}));
 
@@ -139,7 +149,7 @@ export const AutomatedIrpApp = ({
 
   const onClickSave = () => {    
 
-    let re_ip = new RegExp('(^([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,5})?$)|(^[a-zA-Z0-9][a-zA-Z0-9-_]{0,61}[a-zA-Z0-9]{0,1}\.([a-zA-Z]{1,6}|[a-zA-Z0-9-]{1,30}\.[a-zA-Z]{2,3})(:[0-9]{1,5})?$)');
+    let re_ip = new RegExp('(^([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,5})?$)|(^[a-zA-Z0-9][a-zA-Z0-9-_]{0,61}[a-zA-Z0-9]{0,1}\.([a-zA-Z]{1,6}|[a-zA-Z0-9-]{1,30}\.[a-zA-Z]{2,3})(:[0-9]{1,5})?$)|(^([a-zA-Z0-9-]{1,30}.){2}svc.cluster.local$)');
     let re_workflow = new RegExp('^webhook_[a-z0-9-]*$');
 
     validate_data(shuffleIpTemp, re_ip, "IP", setShuffleIp);
@@ -206,7 +216,7 @@ export const AutomatedIrpApp = ({
 
   async function uploadMultiple(formData: FormData) {
     try {
-      const response = await fetch("http://artifact-collector.dissect/upload", {
+      const response = await fetch("http://dissect.artifact-collector.svc.cluster.local/upload", {
         method: "POST",
         body: formData,
       });
