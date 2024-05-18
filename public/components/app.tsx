@@ -291,7 +291,7 @@ export const AutomatedIrpApp = ({
                     <h2>
                       <FormattedMessage
                         id="automatedIrp.congratulationsTitle"
-                        defaultMessage="Панель управления автоматизированной системой описания этапов реализации компьюитерного инциндента"
+                        defaultMessage="Панель управления автоматизированной системой описания этапов реализации компьютерного инцидента"
                       />
                     </h2>
                   </EuiTitle>
